@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тест по географии России</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#1a1d21;--muted:#5d6672;--accent:#1f6feb;--ok:#1a7f37;--bad:#cf222e;--line:#d8dde3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1318;--card:#1a2028;--text:#e8ecf1;--muted:#9aa5b1;--accent:#58a6ff;--ok:#3fb950;--bad:#f85149;--line:#2d353f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1318;--card:#1a2028;--text:#e8ecf1;--muted:#9aa5b1;--accent:#58a6ff;--ok:#3fb950;--bad:#f85149;--line:#2d353f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.35rem;margin:8px 0 4px}
+.sub{color:var(--muted);margin:0 0 16px;font-size:.95rem}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.q{font-size:1.1rem;font-weight:600;margin:0 0 14px}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,transparent)}
+.opt:disabled{cursor:default}
+.exp{margin:6px 0 14px;color:var(--muted);font-size:.95rem}
+.btn{font:inherit;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:10px;padding:12px 18px;cursor:pointer;width:100%}
+.score{font-size:2.4rem;font-weight:700;margin:4px 0}
+</style>
+</head>
+<body>
+<main>
+<h1>Тест по географии России</h1>
+<p class="sub">3 вопроса · один верный ответ в каждом</p>
+<div class="bar"><i id="bar"></i></div>
+<div class="card" id="card"></div>
+</main>
+<script>
+var Q=[
+{q:"Какая река самая длинная в Европе и полностью протекает по России?",o:["Дон","Волга","Кама","Печора"],a:1,e:"Волга — около 3530 км, впадает в Каспийское море."},
+{q:"Какое озеро России — самое глубокое в мире?",o:["Ладожское","Онежское","Байкал","Телецкое"],a:2,e:"Байкал: максимальная глубина около 1642 м."},
+{q:"Какая гора — самая высокая в России?",o:["Белуха","Эльбрус","Народная","Казбек"],a:1,e:"Эльбрус на Кавказе — 5642 м (западная вершина)."}
+];
+var i=0,score=0,card=document.getElementById("card"),bar=document.getElementById("bar");
+function show(){
+  bar.style.width=(i/Q.length*100)+"%";
+  var x=Q[i];
+  card.innerHTML="";
+  var p=document.createElement("p");p.className="q";p.textContent=(i+1)+". "+x.q;card.appendChild(p);
+  var btns=[];
+  x.o.forEach(function(t,k){
+    var b=document.createElement("button");b.className="opt";b.textContent=t;
+    b.onclick=function(){answer(k,btns,x)};
+    btns.push(b);card.appendChild(b);
+  });
+}
+function answer(k,btns,x){
+  btns.forEach(function(b,j){b.disabled=true;if(j===x.a)b.classList.add("ok");else if(j===k)b.classList.add("bad")});
+  if(k===x.a)score++;
+  var e=document.createElement("p");e.className="exp";e.textContent=x.e;card.appendChild(e);
+  var n=document.createElement("button");n.className="btn";
+  n.textContent=(i<Q.length-1)?"Дальше":"Показать результат";
+  n.onclick=function(){i++;if(i<Q.length)show();else done()};
+  card.appendChild(n);
+}
+function done(){
+  bar.style.width="100%";
+  card.innerHTML="";
+  var s=document.createElement("div");s.className="score";s.textContent=score+" из "+Q.length;card.appendChild(s);
+  var m=document.createElement("p");m.className="exp";
+  m.textContent=score===3?"Отлично, все ответы верные!":score===2?"Хороший результат!":"Есть что повторить — попробуйте ещё раз.";
+  card.appendChild(m);
+  var r=document.createElement("button");r.className="btn";r.textContent="Пройти заново";
+  r.onclick=function(){i=0;score=0;show()};
+  card.appendChild(r);
+}
+show();
+</script>
+</body>
+</html>
